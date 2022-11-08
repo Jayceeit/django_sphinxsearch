@@ -3,7 +3,7 @@ import re
 
 from django.core.exceptions import FieldError, EmptyResultSet
 from django.db import models
-from django.db.models.expressions import Random
+from django.db.models.functions import Random
 from django.db.models.lookups import Exact
 from django.db.models.sql import compiler, AND
 from django.db.models.sql.constants import ORDER_DIR
