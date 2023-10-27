@@ -60,7 +60,7 @@ def get_version():
 
 setup(
     name=package_name,
-    version=get_version() or 'dev',
+    version=__import__('sphinxsearch').VERSION,
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=[
