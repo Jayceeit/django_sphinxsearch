@@ -3,6 +3,6 @@ requires = [
     "setuptools",
     "wheel",
     "Django>=2.0,<=3.2",
-    "mysqlclient>=1.4.4,<2.1.0",
+    "mysqlclient==2.1.0",
     "pytz"
 ]
