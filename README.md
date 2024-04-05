@@ -7,8 +7,8 @@
 [![PyPI version](https://badge.fury.io/py/django-sphinxsearch.svg)](https://badge.fury.io/py/django-sphinxsearch)
 
 * Not a [django_sphinx_db](https://github.com/smartfile/django-sphinx-db) fork
-* `Django>=2.0,<3.1` supported
-* Tested against Django-2.2 (LTS) and Django-3.0
+* `Django>=2.0,==3.2.25` supported
+* Tested against Django-3.2.25
 
 ## Installation and usage
 
@@ -141,14 +141,14 @@ docker-compose up django
 
 * Sphinxsearch engine has some issues with SQL-syntax support, and they vary
 from one version to another. I.e. float attributes are not comparable,
-string attributes were not comparable till v2.2.7.
-* Without limits sphinxsearch returns only 20 matched documents.
+string attributes were not comparable till Sphinxsearch v2.2.7.
+* Without limits Sphinxsearch returns only 20 matched documents.
 * uint attributes accept -1 but return it as unsigned 32bit integer.
 * bigint accept 2**63 + 1 but return it as signed 64bit integer.
 * Use SphinxIntegerField and SphinxBigIntegerField instead of IntegerField and
 BigIntegerField from django.db.models, because IN is an expression in
-SQL (`value IN column`), but a function (`IN(value, column)`) in sphinxsearch.
-* Since 3.0.1 multi64 field incorrectly parses values greater than 2**31 and is
+SQL (`value IN column`), but a function (`IN(value, column)`) in Sphinxsearch.
+* Since Sphinxsearch 3.0.1, multi64 field incorrectly parses values greater than 2**31 and is
 completely unusable for bigint values.
-* In 3.1.1 you can create rt index with same string field and attr from config
+* In Sphinxsearch 3.1.1 you can create rt index with same string field and attr from config
 but you cant clone this index, so you attr-based filtering does not work.

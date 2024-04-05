@@ -27,7 +27,7 @@ class SphinxOperations(base.DatabaseOperations):
         if getattr(name, 'is_table_name', False):
             db_name = self.connection.settings_dict.get('NAME', '')
             if db_name:
-                name = '%s___%s' % (db_name, name)
+                name = f'{db_name}___{name}'
         return super().quote_name(name)
 
 
@@ -158,14 +158,30 @@ class DatabaseWrapper(base.DatabaseWrapper):
 
     @cached_property
     def mysql_version(self):
-        # Django>=1.10 makes if differently
-        with self.temporary_connection():
-            server_info = self.connection.get_server_info()
-        match = server_version_re.match(server_info)
+        match = server_version_re.match(self.mysql_server_info)
         if not match:
-            raise Exception('Unable to determine MySQL version from version '
-                            'string %r' % server_info)
+            raise Exception(f'Unable to determine MySQL version from version string {self.mysql_server_info}')
         return tuple(int(x) for x in match.groups())
+
+    @cached_property
+    def mysql_server_info(self):
+        return self.mysql_server_data['version']
+
+    @cached_property
+    def mysql_server_data(self):
+        with self.temporary_connection() as cursor:
+            # Select MySQL version variable only;
+            # other sysvars previously queried here cause Sphinxsearch to fall over.
+            cursor.execute("SELECT VERSION()")
+            row = cursor.fetchone()
+        return {
+            'version': row[0],
+            'sql_mode': "",
+            'default_storage_engine': "",
+            'sql_auto_is_null': True,
+            'lower_case_table_names': True,
+            'has_zoneinfo_database': False,
+        }
 
     def _savepoint(self, sid):
         """ Stub for savepoints.
